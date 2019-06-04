@@ -1,0 +1,22 @@
+{
+  "name": "open-project-parking",
+  "version": "1.0.0",
+  "description": "Open Project Parking",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alfaben12/Open-Project-Parking.git"
+  },
+  "author": "Thariq Alfa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alfaben12/Open-Project-Parking/issues"
+  },
+  "homepage": "https://github.com/alfaben12/Open-Project-Parking#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
