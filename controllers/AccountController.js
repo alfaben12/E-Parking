@@ -29,7 +29,7 @@ module.exports = {
 		/* FETCH ZSequelize */
 		let accountData = await ZSequelize.fetch(field, where, orderBy, groupBy, model);
 
-		/* FETCTH RESULT & CONDITION */
+		/* FETCTH RESULT & CONDITION & RESPONSE */
 		if (accountData.result !== 0) {
 			let accountid = accountData.dataValues.id;
 			let jwtToken = await JWTAuth.JWTsign(accountid);
