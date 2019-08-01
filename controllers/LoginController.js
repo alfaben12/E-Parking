@@ -67,7 +67,7 @@ module.exports = {
 	},
 
 	processGetAccountLogin: async function(req, res){
-		let field = ['id', 'full_name', 'email', 'password', 'createdAt'];
+		let field = ['id', 'username', 'full_name', 'email', 'password', 'createdAt'];
 		let where = false;
 		let orderBy = false;
 		let groupBy = false;
