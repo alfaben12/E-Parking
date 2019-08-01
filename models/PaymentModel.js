@@ -1,9 +1,10 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/db');
+const AccountModel = require('../models/AccountModel');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const Payment_Parking = sequelize.define(
+const PaymentParking = sequelize.define(
 	'payment_parking',
 	{
 		id: {
@@ -12,7 +13,7 @@ const Payment_Parking = sequelize.define(
 			autoIncrement: true
         },
         from_accountid: {
-			type: Sequelize.INTEGER
+			type: Sequelize.INTEGER,
 		},
 		to_accountid: {
 			type: Sequelize.INTEGER
@@ -37,4 +38,8 @@ const Payment_Parking = sequelize.define(
 	}
 );
 
-module.exports = Payment_Parking;
+AccountModel.hasMany(PaymentParking);
+PaymentParking.belongsTo(AccountModel, { as: 'sender', foreignKey: 'from_accountid'});
+PaymentParking.belongsTo(AccountModel, { as: 'receiver', foreignKey: 'to_accountid'});
+
+module.exports = PaymentParking;

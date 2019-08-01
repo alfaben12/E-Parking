@@ -93,51 +93,22 @@ module.exports = {
     },
     
     processFetchPaymentDatas: function(req, res) {
-		// let field = ['id', 'from_accountid', 'to_accountid', 'nominal', 'createdAt'];
-        // let where = false;
-        // let orderBy = false;
-        // let groupBy = false;
-        // let model = 'PaymentModel'
-        // let joins = [
-        //     [
-        //         {
-        //             'fromModel' : 'PaymentModel',
-        //             'fromKey' : 'from_accountid',
-        //             'bridgeType' : 'belongsTo',
-        //             'toModel' : 'AccountModel',
-        //             'toKey' : 'id',
-        //             'attributes' : ['id', 'full_name']
-        //         }
-        //     ]
-        // ];
-        // let payment_result = await ZSequelize.fetchJoins(true, field, where, orderBy, groupBy, model, joins);
-		
-		// /* FETCTH RESULT & CONDITION & RESPONSE */
-		// if (payment_result.result) {
-		
-		// }else{
-		// 	return res.status(404).json({
-		// 		result : payment_result.result,
-		// 		data:{
-		// 			code: 404,
-		// 			message: "Data does not exist ."
-		// 		},
-		// 	});
-        // }
-        
-        AccountModel.hasMany(PaymentModel);
-        PaymentModel.belongsTo(AccountModel, { as: 'sender', foreignKey: 'from_accountid'});
-        PaymentModel.belongsTo(AccountModel, { as: 'receiver', foreignKey: 'to_accountid'});
-
         PaymentModel.findAll({
-                attributes: ['id', 'nominal', 'createdAt'
-            ],
-        include: [
-                { model: AccountModel, as: 'sender'},
-                { model: AccountModel, as: 'receiver'},
+            attributes: ['id', 'nominal', 'createdAt'],
+            include: [
+                {
+                    attributes: ['id', 'full_name', 'balance'],
+                    model: AccountModel,
+                    as: 'sender'
+                  },
+                {
+                    attributes: ['id', 'full_name', 'balance'],
+                    model: AccountModel,
+                    as: 'receiver'
+                },
             ]
         }).then((results) => {
-            return res.status(200).json({
+            res.status(200).json({
 				result : true,
 				data: {
 					code: 200,
