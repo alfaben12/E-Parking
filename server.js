@@ -9,6 +9,7 @@ const RegisterRouter = require('./routes/RegisterRouter');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get('/', (req, res) => res.send('Hello KMIPN 2019!'))
 app.use('/Account', AccountRouter);
 app.use('/Login', LoginRouter);
 app.use('/Register', RegisterRouter);
