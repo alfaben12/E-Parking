@@ -3,34 +3,22 @@ const sequelize = require('../config/db');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const Account = sequelize.define(
-	'account',
+const Payment_Parking = sequelize.define(
+	'payment_parking',
 	{
 		id: {
 			type: Sequelize.INTEGER,
 			primaryKey: true,
 			autoIncrement: true
-		},
-		balance: {
+        },
+        from_accountid: {
 			type: Sequelize.INTEGER
 		},
-		roleid: {
+		to_accountid: {
 			type: Sequelize.INTEGER
-		},
-		username: {
-			type: Sequelize.STRING(255)
-		},
-		password: {
-			type: Sequelize.TEXT
-		},
-		full_name: {
-			type: Sequelize.STRING(255)
-		},
-		email: {
-			type: Sequelize.STRING(255)
-		},
-		address: {
-			type: Sequelize.TEXT
+        },
+        nominal: {
+			type: Sequelize.INTEGER
 		},
 		createdAt: {
 			type: 'TIMESTAMP',
@@ -49,4 +37,4 @@ const Account = sequelize.define(
 	}
 );
 
-module.exports = Account;
+module.exports = Payment_Parking;

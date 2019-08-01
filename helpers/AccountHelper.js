@@ -1,7 +1,7 @@
 const ZSequelize = require('../libraries/ZSequelize');
 
 exports.getAccount = async function(accountid) {
-	let field = ['id','balance', 'full_name', 'email', 'createdAt'];
+	let field = ['id', 'full_name', 'email', 'balance', 'createdAt'];
 	let where = {
 		id: accountid
 	};

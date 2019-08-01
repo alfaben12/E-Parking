@@ -147,11 +147,17 @@ exports.fetchJoins = function(findAll, anyField, anyWhere, orderBy, groupBy, mod
 		const ModelOne = require('../models/'+ modelJoins[join_number][0].fromModel);
 		const ModelTwo = require('../models/'+ modelJoins[join_number][0].toModel);
 		if (modelJoins[join_number][0].bridgeType === 'hasMany') {
-			ModelOne.hasMany(ModelTwo, {foreignKey:modelJoins[join_number][0].toKey})
+			ModelOne.hasMany(ModelTwo, {
+				foreignKey:modelJoins[join_number][0].toKey
+			})
 		}else if (modelJoins[join_number][0].bridgeType === 'belongsTo') {
-			ModelOne.belongsTo(ModelTwo, {foreignKey:modelJoins[join_number][0].fromKey})
+			ModelOne.belongsTo(ModelTwo, {
+				foreignKey:modelJoins[join_number][0].fromKey
+			})
 		}else{
-			ModelOne.hasOne(ModelTwo, {foreignKey:modelJoins[join_number][0].toKey})
+			ModelOne.hasOne(ModelTwo, {
+				foreignKey:modelJoins[join_number][0].toKey
+			})
 		}
 
 		let where_object = {};
