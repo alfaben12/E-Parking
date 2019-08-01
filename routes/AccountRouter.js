@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const AccountController = require('../controllers/AccountController');
+const JWT = require('../helpers/JWT');
 
-router.post(
-	'/processAccountLogin/',
-	AccountController.processAccountLogin
+router.get(
+	'/processFetchAccountDatas/',
+	JWT.JWTverify,
+	AccountController.processFetchAccountDatas
 );
 
 module.exports = router;

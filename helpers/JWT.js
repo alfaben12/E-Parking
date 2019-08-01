@@ -8,7 +8,7 @@ exports.JWTsign = function(accountid) {
 				accountid: accountid,
 				generate_at: moment().format('dddd, MMMM Do YYYY, h:mm:ss a')
 			},
-			'OpenProjectParkir',
+			'ZPay',
 			function(err, token) {
 				resolve(token);
 				reject('Error');
@@ -18,13 +18,18 @@ exports.JWTsign = function(accountid) {
 };
 
 exports.JWTverify = function(req, res, next) {
-	const token = req.body.jwtToken;
+	const bearerHeader = req.headers.authorization;
+	const token = bearerHeader ? bearerHeader.split(" ")[1] : undefined
+	
 	if (token) {
-		jwt.verify(token, 'OpenProjectParkir', function(err, payload) {
+		jwt.verify(token, 'ZPay', function(err, payload) {
 			if (err) {
-				res.json({
+				res.status(401).json({
 					result: false,
-					message: 'Invalid Signature.'
+					data:{
+						code: 401,
+						message: 'Invalid Signature.'
+					}
 				});
 			} else {
 				req.payload = payload;
@@ -32,9 +37,12 @@ exports.JWTverify = function(req, res, next) {
 			}
 		});
 	} else {
-		res.json({
+		res.status(401).json({
 			result: false,
-			message: 'Invalid Signature.'
+			data:{
+				code: 401,
+				message: 'Invalid Signature.'
+			}
 		});
 	}
 };

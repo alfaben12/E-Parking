@@ -6,7 +6,7 @@ exports.insertValues = function(values, modelName) {
     return new Promise((resolve, reject) => {
 		Model
       		.create(values)
-			.then((result) => resolve({result: result._options.isNewRecord == true ? 1 : 0, record: result.dataValues}))
+			.then((result) => resolve({result: result._options.isNewRecord, record: result.dataValues}))
 			.catch((err) => reject(err));
 	});
 };
@@ -16,7 +16,7 @@ exports.updateValues = function(values, anyWhere, modelName) {
     return new Promise((resolve, reject) => {
 		Model
       		.update(values, { where: anyWhere })
-			.then((result) => resolve({result: result[0]}))
+			.then((result) => resolve({result: result[0] == 1 ? true : false}))
 			.catch((err) => reject(err));
 	});
 };
@@ -26,25 +26,23 @@ exports.destroyValues = function(anyWhere, modelName) {
     return new Promise((resolve, reject) => {
 		Model
             .destroy({where: anyWhere})
-			.then((result) => resolve({result: result}))
+			.then((result) => resolve({result: result == 1 ? true : false}))
 			.catch((err) => reject(err));
 	});
 };
 
-exports.fetch = function(anyField, anyWhere, orderBy, groupBy, modelName) {
+exports.fetch = function(findAll, anyField, anyWhere, orderBy, groupBy, modelName) {
 	if (!Array.isArray(anyField)) {
 		console.error('Value must contain an array.');
-		process.exit();
+		anyField = false;
 	}else{
 		anyField = anyField;
 	}
 
 	if (anyWhere === false) {
 		anyWhere = '';
-		findAll = true;
 	}else{
 		anyWhere = anyWhere;
-		findAll = false;
 	}
 
 	if (orderBy === false) {
@@ -77,8 +75,9 @@ exports.fetch = function(anyField, anyWhere, orderBy, groupBy, modelName) {
 					group : groupBy
 				  })
 				.then((result) => resolve({
-					result: result === null ? 0 : 1,
-					dataValues: result
+					result: result !== null ? true : false,
+					joinFind : 'Fetch One',
+					dataValues: result,
 				}))
 				.catch((err) => reject(err));
 			});
@@ -87,11 +86,13 @@ exports.fetch = function(anyField, anyWhere, orderBy, groupBy, modelName) {
 		Model
             .findAll({
 				attributes: anyField,
+				where: anyWhere,
 				order: orderBy,
 				group : groupBy
 			  })
 			.then((result) => resolve({
-				result: result.length > 0 ? 1 : 0,
+				result: result.length > 0 ? true : false,
+				joinFind : 'Fetch All',
 				dataValues: result
 			}))
 			.catch((err) => reject(err));
@@ -99,7 +100,7 @@ exports.fetch = function(anyField, anyWhere, orderBy, groupBy, modelName) {
 	}
 };
 
-exports.fetchJoins = function(anyField, anyWhere, orderBy, groupBy, modelName, modelJoins) {
+exports.fetchJoins = function(findAll, anyField, anyWhere, orderBy, groupBy, modelName, modelJoins) {
 	if (!Array.isArray(anyField)) {
 		console.error('The value must contain the specified array and object.');
 		process.exit();
@@ -109,10 +110,8 @@ exports.fetchJoins = function(anyField, anyWhere, orderBy, groupBy, modelName, m
 
 	if (anyWhere === false) {
 		anyWhere = '';
-		findAll = true;
 	}else{
 		anyWhere = anyWhere;
-		findAll = false;
 	}
 
 	if (orderBy === false) {
@@ -178,7 +177,7 @@ exports.fetchJoins = function(anyField, anyWhere, orderBy, groupBy, modelName, m
 					group : groupBy
 				})
 				.then((result) => resolve({
-					result: result !== null ? 1 : 0,
+					result: result !== null ? true : false,
 					joinFind : 'Fetch One',
 					dataValues: result === null ? [] : result
 				}))
@@ -189,12 +188,13 @@ exports.fetchJoins = function(anyField, anyWhere, orderBy, groupBy, modelName, m
 			Model
 				.findAll({
 					attributes: anyField,
+					where: anyWhere,
 					include: includes,
 					order: orderBy,
 					group : groupBy
 				})
 				.then((result) => resolve({
-					result: result !== null ? 1 : 0,
+					result: result !== null ? true : false,
 					joinFind : 'Fetch All',
 					dataValues: result === null ? [] : result
 				}))
