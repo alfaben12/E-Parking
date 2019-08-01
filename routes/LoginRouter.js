@@ -7,4 +7,9 @@ router.post(
 	LoginController.processAccountLogin
 );
 
+router.get(
+	'/processGetAccountLogin',
+	LoginController.processGetAccountLogin
+);
+
 module.exports = router;

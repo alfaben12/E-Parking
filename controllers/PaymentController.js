@@ -77,7 +77,7 @@ module.exports = {
 				result : sender_account_result.result,
 				data: {
 					code: 200,
-					message: "Success fetch data.",
+					message: "Payment success.",
 					datas: sender_account_balance
 				}
 			});
@@ -86,7 +86,7 @@ module.exports = {
 				result : sender_account_result.result,
 				data:{
 					code: 404,
-					message: "Data does not exist ."
+					message: "Payment failed."
 				},
 			});
 		}

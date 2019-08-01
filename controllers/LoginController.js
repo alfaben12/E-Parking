@@ -64,5 +64,36 @@ module.exports = {
 				},
 			});
 		}
+	},
+
+	processGetAccountLogin: async function(req, res){
+		let field = ['id', 'full_name', 'email', 'password', 'createdAt'];
+		let where = false;
+		let orderBy = false;
+		let groupBy = false;
+		let model = 'AccountModel'
+		let joins = [
+			[
+				{
+					'fromModel' : 'AccountModel',
+					'fromKey' : 'roleid',
+					'bridgeType' : 'belongsTo',
+					'toModel' : 'AccountRoleModel',
+					'toKey' : 'id',
+					'attributes' : ['id', 'name']
+				}
+			]
+		];
+		let account = await ZSequelize.fetchJoins(true, field, where, orderBy, groupBy, model, joins);
+
+		/* SET RESPONSE */
+		return res.status(200).json({
+			result: account.result,
+			data : {
+				code: 200,
+				message: "Successfull fetch data.",
+				datas: account.dataValues
+			}
+		});
 	}
 }
