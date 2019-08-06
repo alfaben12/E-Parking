@@ -3,20 +3,19 @@ const AccountRoleModel = require('../models/AccountRoleModel');
 const ZSequelize = require('../libraries/ZSequelize');
 const JWTAuth = require('../helpers/JWT');
 const Sequelize = require('sequelize');
+const AccountHelper = require('../helpers/AccountHelper');
 
 module.exports = {
     processAccountLogin: async function(req, res) {
 		/* POST BODY */
 		let username = req.body.username;
 		let password = req.body.password;
-		let roleid = req.body.roleid;
 
 		/* PARAMETER ZSequelize */
 		let field = ['id', 'username', 'full_name', 'email'];
 		let where = {
 			username: username,
-			password: password,
-			roleid: roleid
+			password: password
 		  	};
 		let orderBy = [['id', 'DESC']];
 		let groupBy = false;
@@ -28,20 +27,10 @@ module.exports = {
 		/* FETCTH RESULT & CONDITION & RESPONSE */
 		if (accountData.result) {
 			let accountid = accountData.dataValues.id;
+			let helperAccountData = await AccountHelper.getAccount(accountid);
+
 			let jwtToken = await JWTAuth.JWTsign(accountid);
 		
-			/* PARAMETER ZSequelize */
-			let field = ['id', 'name'];
-			let where = {
-				id: roleid
-				};
-			let orderBy = [['id', 'DESC']];
-			let groupBy = false;
-			let model = 'AccountRoleModel';
-
-			/* FETCH ZSequelize */
-			let roleData = await ZSequelize.fetch(false, field, where, orderBy, groupBy, model);
-
 			/* SET RESPONSE */
 			return res.status(200).json({
 				result: accountData.result,
@@ -49,8 +38,7 @@ module.exports = {
 					code: 200,
 					message: "Successfull login.",
 					datas:{
-						accountData: accountData.dataValues,
-						roleData: roleData.dataValues,
+						accountData: helperAccountData.dataValues,
 						jwtTokenData: jwtToken
 					}
 				}
@@ -67,6 +55,7 @@ module.exports = {
 	},
 
 	processGetAccountLogin: async function(req, res){
+		/* PARAMETER ZSequelize */
 		let field = ['id', 'full_name', 'email', 'username', 'password', 'createdAt'];
 		let where = false;
 		let orderBy = false;

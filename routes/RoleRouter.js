@@ -6,7 +6,7 @@ const JWT = require('../helpers/JWT');
 router.get(
 	'/',
 	JWT.JWTverify,
-	AccountController.processFetchAccountDatas
+	AccountController.processGetRoleAccount
 );
 
 module.exports = router;

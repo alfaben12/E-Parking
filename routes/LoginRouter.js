@@ -3,12 +3,12 @@ const router = express.Router();
 const LoginController = require('../controllers/LoginController');
 
 router.post(
-	'/processAccountLogin/',
+	'/',
 	LoginController.processAccountLogin
 );
 
 router.get(
-	'/processGetAccountLogin',
+	'/accounts/',
 	LoginController.processGetAccountLogin
 );
 
