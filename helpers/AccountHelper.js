@@ -18,6 +18,16 @@ exports.getAccount = async function(accountid) {
 				'toKey' : 'id',
 				'attributes' : ['id', 'name']
 			}
+		],
+		[
+			{
+				'fromModel' : 'AccountModel',
+				'fromKey' : 'account.id',
+				'bridgeType' : 'hasOne',
+				'toModel' : 'AssignmentModel',
+				'toKey' : 'accountid',
+				'attributes' : ['id', 'location_name', 'location_address', 'district', 'city']
+			}
 		]
 	];
 	let result = await ZSequelize.fetchJoins(false, field, where, orderBy, groupBy, model, joins);

@@ -1,28 +1,30 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/db');
-const AccountModel = require('../models/AccountModel');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const PaymentParking = sequelize.define(
-	'payment_parking',
+const Assignment = sequelize.define(
+	'assignment',
 	{
 		id: {
 			type: Sequelize.INTEGER,
 			primaryKey: true,
 			autoIncrement: true
-        },
-        from_accountid: {
-			type: Sequelize.INTEGER,
 		},
-		to_accountid: {
+        accountid: {
 			type: Sequelize.INTEGER
         },
-        nominal: {
-			type: Sequelize.INTEGER
-		},
-		location_detail: {
-			type: Sequelize.TEXT
+        location_name: {
+			type: Sequelize.STRING(255)
+        },
+        location_address: {
+			type: Sequelize.STRING(255)
+        },
+        district: {
+			type: Sequelize.STRING(255)
+        },
+        city: {
+			type: Sequelize.STRING(255)
 		},
 		createdAt: {
 			type: 'TIMESTAMP',
@@ -41,8 +43,4 @@ const PaymentParking = sequelize.define(
 	}
 );
 
-AccountModel.hasMany(PaymentParking);
-PaymentParking.belongsTo(AccountModel, { as: 'sender', foreignKey: 'from_accountid'});
-PaymentParking.belongsTo(AccountModel, { as: 'receiver', foreignKey: 'to_accountid'});
-
-module.exports = PaymentParking;
+module.exports = Assignment;

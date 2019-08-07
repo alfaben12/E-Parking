@@ -30,11 +30,13 @@ module.exports = {
 		/* FETCH ZSequelize RECEIVER */
 		let receiver_account_result = await AccountHelper.getAccount(receiver_accountid);
 		let receiver_account_balance = receiver_account_result.dataValues.balance;
+		let location_detail = receiver_account_result.dataValues.assignment.location_name +", "+ receiver_account_result.dataValues.assignment.location_address +", "+ receiver_account_result.dataValues.assignment.district +", "+ receiver_account_result.dataValues.assignment.city +".";
 
-        /* PARAMETER ZSequelize PAYMENT  */
+		/* PARAMETER ZSequelize PAYMENT  */
 		let payment_value = {
 			from_accountid: sender_accountid,
 			to_accountid: receiver_accountid,
+			location_detail: location_detail,
             nominal: nominal
 		};
 
