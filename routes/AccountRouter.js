@@ -10,7 +10,7 @@ router.get(
 );
 
 router.get(
-	'/parkirs/',
+	'/parkirs/:accountid/',
 	JWT.JWTverify,
 	AccountController.processFetchAccountDataParking
 );

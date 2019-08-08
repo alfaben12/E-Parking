@@ -32,7 +32,7 @@ module.exports = {
 
 	processFetchAccountDataParking: async function(req, res) {
 		/* PARAMETER ZSequelize VOUCHER  */
-		let accountid = req.body.accountid;
+		let accountid = req.params.accountid;
 
 		/* FETCH ZSequelize VOUCHER */
 		let account_result = await AccountHelper.getAccount(accountid);

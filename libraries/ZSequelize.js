@@ -147,25 +147,21 @@ exports.fetchJoins = function(findAll, anyField, anyWhere, orderBy, groupBy, mod
 		const ModelOne = require('../models/'+ modelJoins[join_number][0].fromModel);
 		const ModelTwo = require('../models/'+ modelJoins[join_number][0].toModel);
 		if (modelJoins[join_number][0].bridgeType === 'hasMany') {
-			ModelOne.hasMany(ModelTwo, {
-				foreignKey:modelJoins[join_number][0].toKey
-			})
+			ModelOne.hasMany(ModelTwo, {foreignKey:modelJoins[join_number][0].toKey})
 		}else if (modelJoins[join_number][0].bridgeType === 'belongsTo') {
-			ModelOne.belongsTo(ModelTwo, {
-				foreignKey:modelJoins[join_number][0].fromKey
-			})
+			ModelOne.belongsTo(ModelTwo, {foreignKey:modelJoins[join_number][0].fromKey})
 		}else{
-			ModelOne.hasOne(ModelTwo, {
-				foreignKey:modelJoins[join_number][0].toKey
-			})
+			ModelOne.hasOne(ModelTwo, {foreignKey:modelJoins[join_number][0].toKey})
 		}
 
 		let where_object = {};
 		where_object[modelJoins[join_number][0].toKey] = Sequelize.col(modelJoins[join_number][0].fromKey);
 
+		let required = modelJoins[join_number][0].required;
 		include_object['attributes'] = modelJoins[join_number][0].attributes;
 		include_object['model'] = ModelTwo;
 		include_object['where'] = where_object;
+		include_object['required'] = required;
 		
 		includes.push(include_object);
 	}

@@ -16,7 +16,8 @@ exports.getAccount = async function(accountid) {
 				'bridgeType' : 'belongsTo',
 				'toModel' : 'AccountRoleModel',
 				'toKey' : 'id',
-				'attributes' : ['id', 'name']
+				'attributes' : ['id', 'name'],
+				'required' : true
 			}
 		],
 		[
@@ -26,7 +27,8 @@ exports.getAccount = async function(accountid) {
 				'bridgeType' : 'hasOne',
 				'toModel' : 'AssignmentModel',
 				'toKey' : 'accountid',
-				'attributes' : ['id', 'location_name', 'location_address', 'district', 'city']
+				'attributes' : ['id', 'location_name', 'location_address', 'district', 'city'],
+				'required' : false
 			}
 		]
 	];

@@ -69,7 +69,8 @@ module.exports = {
 					'bridgeType' : 'belongsTo',
 					'toModel' : 'AccountRoleModel',
 					'toKey' : 'id',
-					'attributes' : ['id', 'name']
+					'attributes' : ['id', 'name'],
+					'required': true
 				}
 			]
 		];
