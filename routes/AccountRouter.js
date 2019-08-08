@@ -9,4 +9,10 @@ router.get(
 	AccountController.processFetchAccountDatas
 );
 
+router.get(
+	'/parkirs/',
+	JWT.JWTverify,
+	AccountController.processFetchAccountDataParking
+);
+
 module.exports = router;
