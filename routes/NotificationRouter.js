@@ -5,7 +5,6 @@ const JWT = require('../helpers/JWT');
 
 router.post(
 	'/',
-	JWT.JWTverify,
 	NotificationController.sendNotification
 );
 
