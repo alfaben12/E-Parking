@@ -6,8 +6,21 @@ const PaymentModel = require('../models/PaymentModel');
 module.exports = {
 	processPaymentParking: async function(req, res) {
         /* GLOBAL PARAMETER */
-		let nominal = req.body.nominal;
-		
+		let parking_typeid = req.body.parking_typeid;
+		let nominal = 0;
+
+		if(parking_typeid == 1){
+			nominal = 2000;
+		}else if(parking_typeid == 2){
+			nominal = 3000;
+		}else if(parking_typeid == 3){
+			nominal = 5000;
+		}else if(parking_typeid == 4){
+			nominal = 10000;
+		}else{
+			nominal = 2000;
+		}
+
 		/* PARAMETER ZSequelize SENDER  */
 		let sender_accountid = req.payload.accountid;
 

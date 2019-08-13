@@ -11,7 +11,7 @@ module.exports = {
             "to": token,
             "notification": {
                 "title": "E-Parkir",
-                "body": "Pembyaran diterima Rp."+ nominal + " pada "+ moment().format('dddd, MMMM Do YYYY') +".",
+                "body": "Pembayaran diterima Rp."+ nominal + " pada "+ moment().format('dddd, MMMM Do YYYY') +".",
                 "sound": "default"
             }
         };
