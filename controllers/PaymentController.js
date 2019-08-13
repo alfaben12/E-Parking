@@ -185,7 +185,7 @@ module.exports = {
 		let accountid = req.payload.accountid;
 
         PaymentModel.findAll({
-			attributes: ['id', 'nominal', 'createdAt'],
+			attributes: ['id', 'nominal', 'location_detail', 'vehicle_registration', 'createdAt'],
 			where: {
 				from_accountid: accountid
 			},
