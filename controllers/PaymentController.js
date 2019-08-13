@@ -43,6 +43,16 @@ module.exports = {
 		/* PARAMETER ZSequelize RECEIVER  */
 		let receiver_accountid = req.body.receiverid;
 
+		if(sender_accountid == receiver_accountid){
+			return res.status(200).json({
+				result : false,
+				data:{
+					code: 200,
+					message: "Can't transfer to this account."
+				},
+			});
+		}
+
 		/* FETCH ZSequelize RECEIVER */
 		let receiver_account_result = await AccountHelper.getAccount(receiver_accountid);
 		let receiver_account_balance = receiver_account_result.dataValues.balance;
