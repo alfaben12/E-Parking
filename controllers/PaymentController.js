@@ -114,7 +114,7 @@ module.exports = {
     
     processFetchPaymentDatas: function(req, res) {
         PaymentModel.findAll({
-            attributes: ['id', 'nominal', 'createdAt'],
+            attributes: ['id', 'nominal','location_detail', 'vehicle_registration', 'createdAt'],
             include: [
                 {
                     attributes: ['id', 'full_name', 'balance'],
@@ -148,7 +148,7 @@ module.exports = {
 		let accountid = req.payload.accountid;
 
         PaymentModel.findAll({
-			attributes: ['id', 'nominal', 'createdAt'],
+			attributes: ['id', 'nominal','location_detail', 'vehicle_registration', 'createdAt'],
 			where: {
 				to_accountid: accountid
 			},
