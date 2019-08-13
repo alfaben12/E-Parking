@@ -6,6 +6,7 @@ module.exports = {
         var key = "AAAAQu8izZ4:APA91bGGZGwF7hUVbLsF-7OS6XYt8H03W0ThA7THxji9xhcmVfBpnoWyhBEwvNpJlLEHyZ8RiiMjgG-1ZxWmDMss5JoxBGvt3-1JnEPc09La7kC9Z4ImeniE65hx8b2YcmLQ9ORFeDgG";
         var token = req.body.token;
         var nominal = req.body.nominal;
+        var vehicle_registration = req.body.vehicle_registration;
         
         var message = {
             "to": token,
