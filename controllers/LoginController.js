@@ -1,8 +1,5 @@
-const AccountModel = require('../models/AccountModel');
-const AccountRoleModel = require('../models/AccountRoleModel');
 const ZSequelize = require('../libraries/ZSequelize');
 const JWTAuth = require('../helpers/JWT');
-const Sequelize = require('sequelize');
 const AccountHelper = require('../helpers/AccountHelper');
 
 module.exports = {

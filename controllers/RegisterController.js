@@ -1,4 +1,3 @@
-const AccountModel = require('../models/AccountModel');
 const ZSequelize = require('../libraries/ZSequelize');
 const Op = require('sequelize').Op;
 

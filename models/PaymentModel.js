@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/db');
 const AccountModel = require('../models/AccountModel');
+const ParkingTypeModel = require('../models/ParkingTypeModel');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -50,5 +51,6 @@ const PaymentParking = sequelize.define(
 AccountModel.hasMany(PaymentParking);
 PaymentParking.belongsTo(AccountModel, { as: 'sender', foreignKey: 'from_accountid'});
 PaymentParking.belongsTo(AccountModel, { as: 'receiver', foreignKey: 'to_accountid'});
+PaymentParking.belongsTo(ParkingTypeModel, { as: 'parking_type', foreignKey: 'parking_typeid'});
 
 module.exports = PaymentParking;

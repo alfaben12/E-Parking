@@ -1,6 +1,7 @@
 const AccountHelper = require('../helpers/AccountHelper');
 const ZSequelize = require('../libraries/ZSequelize');
 const AccountModel = require('../models/AccountModel');
+const ParkingTypeModel = require('../models/ParkingTypeModel');
 const PaymentModel = require('../models/PaymentModel');
 
 module.exports = {
@@ -124,6 +125,85 @@ module.exports = {
                     attributes: ['id', 'full_name', 'balance'],
                     model: AccountModel,
                     as: 'receiver'
+				},
+				{
+                    attributes: ['id', 'name'],
+                    model: ParkingTypeModel,
+                    as: 'parking_type'
+                },
+            ]
+        }).then((results) => {
+            res.status(200).json({
+				result : true,
+				data: {
+					code: 200,
+					message: "Success fetch data.",
+					datas: results
+				}
+			});
+        });
+	},
+
+	processFetchPaymentDataIncomeAccount: function(req, res) {
+		let accountid = req.payload.accountid;
+
+        PaymentModel.findAll({
+			attributes: ['id', 'nominal', 'createdAt'],
+			where: {
+				to_accountid: accountid
+			},
+            include: [
+                {
+                    attributes: ['id', 'full_name', 'balance'],
+                    model: AccountModel,
+                    as: 'sender'
+                  },
+                {
+                    attributes: ['id', 'full_name', 'balance'],
+                    model: AccountModel,
+                    as: 'receiver'
+				},
+				{
+                    attributes: ['id', 'name'],
+                    model: ParkingTypeModel,
+                    as: 'parking_type'
+                },
+            ]
+        }).then((results) => {
+            res.status(200).json({
+				result : true,
+				data: {
+					code: 200,
+					message: "Success fetch data.",
+					datas: results
+				}
+			});
+        });
+	},
+
+	processFetchPaymentDataExpendAccount: function(req, res) {
+		let accountid = req.payload.accountid;
+
+        PaymentModel.findAll({
+			attributes: ['id', 'nominal', 'createdAt'],
+			where: {
+				from_accountid: accountid
+			},
+            include: [
+                {
+                    attributes: ['id', 'full_name', 'balance'],
+                    model: AccountModel,
+                    as: 'sender'
+                  },
+                {
+                    attributes: ['id', 'full_name', 'balance'],
+                    model: AccountModel,
+                    as: 'receiver'
+				},
+				{
+                    attributes: ['id', 'name'],
+                    model: ParkingTypeModel,
+                    as: 'parking_type'
                 },
             ]
         }).then((results) => {
