@@ -7,6 +7,7 @@ module.exports = {
 	processPaymentParking: async function(req, res) {
         /* GLOBAL PARAMETER */
 		let parking_typeid = req.body.parking_typeid;
+		let vehicle_registration = req.body.vehicle_registration;
 		let nominal = 0;
 
 		if(parking_typeid == 1){
@@ -51,7 +52,9 @@ module.exports = {
 			from_accountid: sender_accountid,
 			to_accountid: receiver_accountid,
 			location_detail: location_detail,
-            nominal: nominal
+			nominal: nominal,
+			parking_typeid:parking_typeid,
+			vehicle_registration:vehicle_registration
 		};
 
 		/* INSERT ZSequelize PAYMENT */
@@ -94,7 +97,7 @@ module.exports = {
 				data: {
 					code: 200,
 					message: "Payment success.",
-					datas: sender_account_balance
+					datas: sender_account_balance - nominal
 				}
 			});
 		}else{

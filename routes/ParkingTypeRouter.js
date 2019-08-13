@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const RoleController = require('../controllers/RoleController');
+const ParkingTypeController = require('../controllers/ParkingTypeController');
 const JWT = require('../helpers/JWT');
 
 router.get(
 	'/',
-	RoleController.processGetRoleAccount
+	ParkingTypeController.processGetParkingType
 );
 
 module.exports = router;

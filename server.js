@@ -9,6 +9,7 @@ const PaymentRouter = require('./routes/PaymentRouter');
 const RoleRouter = require('./routes/RoleRouter');
 const AssignmentRouter = require('./routes/AssignmentRouter');
 const NotificationRouter = require('./routes/NotificationRouter');
+const ParkingTypeRouter = require('./routes/ParkingTypeRouter');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,6 +22,7 @@ app.use('/payments', PaymentRouter);
 app.use('/roles', RoleRouter);
 app.use('/assignments', AssignmentRouter);
 app.use('/notifications', NotificationRouter);
+app.use('/parking_types', ParkingTypeRouter);
 
 
 app.listen(process.env.RUN_PORT, () => console.log(`Example app listening on port ` + process.env.RUN_PORT));

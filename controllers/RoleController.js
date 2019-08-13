@@ -1,4 +1,3 @@
-const AccountHelper = require('../helpers/AccountHelper');
 const ZSequelize = require('../libraries/ZSequelize');
 
 module.exports = {
@@ -6,7 +5,7 @@ module.exports = {
 		/* PARAMETER ZSequelize */
 		let field = ['id', 'name'];
 		let where = false;
-		let orderBy = [['id', 'DESC']];
+		let orderBy = [['id', 'ASC']];
 		let groupBy = false;
 		let model = 'AccountRoleModel';
 		
@@ -18,7 +17,7 @@ module.exports = {
 			result: roleData.result,
 			data : {
 				code: 200,
-				message: "Successfull login.",
+				message: "Successfull get role.",
 				datas: roleData.dataValues
 			}
 		});
