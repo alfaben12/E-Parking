@@ -6,7 +6,8 @@ const PaymentModel = require('../models/PaymentModel');
 module.exports = {
 	processPaymentParking: async function(req, res) {
         /* GLOBAL PARAMETER */
-        let nominal = 2000;
+		let nominal = req.body.nominal;
+		
 		/* PARAMETER ZSequelize SENDER  */
 		let sender_accountid = req.payload.accountid;
 
