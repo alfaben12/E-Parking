@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const con = require('./config/db.js');
 const dotenv = require('dotenv');
+const cors = require('cors');
 const AccountRouter = require('./routes/AccountRouter');
 const LoginRouter = require('./routes/LoginRouter');
 const RegisterRouter = require('./routes/RegisterRouter');
