@@ -391,7 +391,7 @@ module.exports = {
 
 	processGetPaymentGateway: async function(req, res){
 		/* PARAMETER ZSequelize */
-		let field = ['id', 'name', 'position'];
+		let field = ['id', 'name', 'apikey', 'image', 'position'];
 		let where = false;
 		let orderBy = [['position', 'ASC']];
 		let groupBy = false;
