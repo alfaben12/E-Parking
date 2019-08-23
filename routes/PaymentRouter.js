@@ -26,4 +26,20 @@ router.get(
 	PaymentController.processFetchPaymentDataExpendAccount
 );
 
+router.post(
+    '/topup/',
+	JWT.JWTverify,
+	PaymentController.processPaymentTopup
+);
+
+router.post(
+    '/withdraw/',
+	JWT.JWTverify,
+	PaymentController.processPaymentWithdraw
+);
+
+router.get(
+	'/gateway/',
+	PaymentController.processGetPaymentGateway
+);
 module.exports = router;
