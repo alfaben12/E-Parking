@@ -2,13 +2,14 @@ const AccountHelper = require('../helpers/AccountHelper');
 const ZSequelize = require('../libraries/ZSequelize');
 const AccountModel = require('../models/AccountModel');
 const ParkingTypeModel = require('../models/ParkingTypeModel');
-const PaymentModel = require('../models/PaymentModel');
-
+const PaymentParkingModel = require('../models/PaymentParkingModel');
+const GlobalHelper = require('../helpers/GlobalHelper');
 module.exports = {
 	processPaymentParking: async function(req, res) {
         /* GLOBAL PARAMETER */
 		let parking_typeid = req.body.parking_typeid;
 		let vehicle_registration = req.body.vehicle_registration;
+		let payment_number = await GlobalHelper.generateUUID();
 		let nominal = 0;
 
 		if(parking_typeid == 1){
@@ -62,6 +63,7 @@ module.exports = {
 		let payment_value = {
 			from_accountid: sender_accountid,
 			to_accountid: receiver_accountid,
+			payment_number:payment_number,
 			location_detail: location_detail,
 			nominal: nominal,
 			parking_typeid:parking_typeid,
@@ -69,7 +71,7 @@ module.exports = {
 		};
 
 		/* INSERT ZSequelize PAYMENT */
-        let voucher_result = await ZSequelize.insertValues(payment_value, "PaymentModel");
+        let payment_result = await ZSequelize.insertValues(payment_value, "PaymentParkingModel");
         
         /* SENDER ACCOUNT VALUE */
         let final_sender_balance = sender_account_balance - nominal;
@@ -120,10 +122,169 @@ module.exports = {
 				},
 			});
 		}
+	},
+	
+	processPaymentTopup: async function(req, res) {
+		/* GLOBAL PARAMETER */
+		let payment_gateway = req.body.payment_gateway;
+		let payment_gatewayid = 0;
+		
+		if( payment_gateway == "OVO"){
+			payment_gatewayid = 1;
+		}else if( payment_gateway == "Link"){
+			payment_gatewayid = 2;
+		}else if( payment_gateway == "BNI"){
+			payment_gatewayid = 3;
+		}else if( payment_gateway == "MANDIRI"){
+			payment_gatewayid = 4;
+		}else if( payment_gateway == "BCA"){
+			payment_gatewayid = 5;
+		}else if( payment_gateway == "BRI"){
+			payment_gatewayid = 6;
+		}else if( payment_gateway == "Alfamart"){
+			payment_gatewayid = 7;
+		}else if( payment_gateway == "Indomart"){
+			payment_gatewayid = 8;
+		}else if( payment_gateway == "Paypal"){
+			payment_gatewayid = 9;
+		}else{
+			return res.status(400).json({
+				result : false,
+				data:{
+					code: 400,
+					message: "Invalid payment gateway."
+				},
+			});
+		}
+
+		let payment_number = await GlobalHelper.generateUUID();
+		let nominal = parseInt(req.body.nominal, 10)
+		let status = "PAID";
+
+		/* PARAMETER ZSequelize VOUCHER  */
+		let accountid = req.payload.accountid;
+
+		/* FETCH ZSequelize ACCOUNT */
+		let account_data = await AccountHelper.getAccount(accountid);
+
+		/* ACCOUNT VALUE */
+		let account_balance = account_data.dataValues.balance + nominal;
+
+		/* PARAMETER ZSequelize PAYMENT  */
+		let payment_value = {
+			payment_gatewayid: payment_gatewayid,
+			accountid: accountid,
+			payment_number:payment_number,
+			nominal: nominal,
+			status: status
+		};
+
+		/* INSERT ZSequelize PAYMENT */
+        let payment_result = await ZSequelize.insertValues(payment_value, "PaymentTopupModel");
+        
+        /* PARAMETER ZSequelize ACCOUNT  */
+		let account_value = {
+			balance: account_balance,
+		};
+
+		let account_where = {
+			id: accountid
+		};
+
+		/* UPDATE ZSequelize ACCOUNT */
+        let account_result = await ZSequelize.updateValues(account_value, account_where, "AccountModel");
+        
+        /* FETCTH RESULT & CONDITION & RESPONSE */
+		if (account_result.result) {
+			return res.status(200).json({
+				result : account_result.result,
+				data: {
+					code: 200,
+					message: "Topup success.",
+					datas: account_balance
+				}
+			});
+		}else{
+			return res.status(404).json({
+				result : account_result.result,
+				data:{
+					code: 404,
+					message: "Topup failed."
+				},
+			});
+		}
+	},
+	
+	processPaymentWithdraw: async function(req, res) {
+		/* GLOBAL PARAMETER */
+		let payment_number = await GlobalHelper.generateUUID();
+		let nominal = parseInt(req.body.nominal, 10)
+		let status = "PAID";
+
+		/* PARAMETER ZSequelize VOUCHER  */
+		let accountid = req.payload.accountid;
+
+		/* FETCH ZSequelize ACCOUNT */
+		let account_data = await AccountHelper.getAccount(accountid);
+
+		/* ACCOUNT VALUE */
+		let account_balance = account_data.dataValues.balance - nominal;
+
+		if (account_data.dataValues.balance < nominal) {
+			return res.status(200).json({
+				result : false,
+				data: {
+					code: 200,
+					message: "Saldo kurang."
+				}
+			});
+		}
+		/* PARAMETER ZSequelize PAYMENT  */
+		let payment_value = {
+			accountid: accountid,
+			payment_number:payment_number,
+			nominal: nominal,
+			status: status
+		};
+
+		/* INSERT ZSequelize PAYMENT */
+        let payment_result = await ZSequelize.insertValues(payment_value, "PaymentWithdrawModel");
+        
+        /* PARAMETER ZSequelize ACCOUNT  */
+		let account_value = {
+			balance: account_balance,
+		};
+
+		let account_where = {
+			id: accountid
+		};
+
+		/* UPDATE ZSequelize ACCOUNT */
+        let account_result = await ZSequelize.updateValues(account_value, account_where, "AccountModel");
+        
+        /* FETCTH RESULT & CONDITION & RESPONSE */
+		if (account_result.result) {
+			return res.status(200).json({
+				result : account_result.result,
+				data: {
+					code: 200,
+					message: "Withdraw success.",
+					datas: account_balance
+				}
+			});
+		}else{
+			return res.status(404).json({
+				result : account_result.result,
+				data:{
+					code: 404,
+					message: "Withdraw failed."
+				},
+			});
+		}
     },
     
     processFetchPaymentDatas: function(req, res) {
-        PaymentModel.findAll({
+        PaymentParkingModel.findAll({
             attributes: ['id', 'nominal','location_detail', 'vehicle_registration', 'createdAt'],
             include: [
                 {
@@ -157,7 +318,7 @@ module.exports = {
 	processFetchPaymentDataIncomeAccount: function(req, res) {
 		let accountid = req.payload.accountid;
 
-        PaymentModel.findAll({
+        PaymentParkingModel.findAll({
 			attributes: ['id', 'nominal','location_detail', 'vehicle_registration', 'createdAt'],
 			where: {
 				to_accountid: accountid
@@ -194,7 +355,7 @@ module.exports = {
 	processFetchPaymentDataExpendAccount: function(req, res) {
 		let accountid = req.payload.accountid;
 
-        PaymentModel.findAll({
+        PaymentParkingModel.findAll({
 			attributes: ['id', 'nominal', 'location_detail', 'vehicle_registration', 'createdAt'],
 			where: {
 				from_accountid: accountid
@@ -227,4 +388,26 @@ module.exports = {
 			});
         });
 	},
+
+	processGetPaymentGateway: async function(req, res){
+		/* PARAMETER ZSequelize */
+		let field = ['id', 'name', 'position'];
+		let where = false;
+		let orderBy = [['position', 'ASC']];
+		let groupBy = false;
+		let model = 'PaymentGatewayModel';
+		
+		/* FETCH ZSequelize */
+		let paymentData = await ZSequelize.fetch(true, field, where, orderBy, groupBy, model);
+
+		/* SET RESPONSE */
+		return res.status(200).json({
+			result: paymentData.result,
+			data : {
+				code: 200,
+				message: "Successfull get payment gateway.",
+				datas: paymentData.dataValues
+			}
+		});
+	}
 }
