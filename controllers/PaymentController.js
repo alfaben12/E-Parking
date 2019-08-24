@@ -469,7 +469,8 @@ module.exports = {
 
 		PaymentParkingModel.findAll({
 			attributes: [
-				[Sequelize.literal(`SUM(nominal)`), 'total'], 
+				[Sequelize.literal(`SUM(nominal)`), 'total'],
+				[Sequelize.literal(`COUNT(*)`), 'total_vehicle'], 
 				[Sequelize.fn('MONTH', Sequelize.col('createdAt')), 'month'],
 				[Sequelize.fn('YEAR', Sequelize.col('createdAt')), 'year']],
 			where: {
