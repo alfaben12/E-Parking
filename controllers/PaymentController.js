@@ -424,12 +424,14 @@ module.exports = {
         }).then((results) => {
 			let total = 0;
 			let total_vehicle = 0;
+			let percent_goverment= 30;
 			var datas = [];
 			for (let i = 0; i < results.length; i++) {
 				total = total + parseInt(results[i].dataValues.total);
 				total_vehicle = total_vehicle + parseInt(results[i].dataValues.total_vehicle);
 				let data = {
 					total: parseInt(results[i].dataValues.total),
+					goverment: Math.round(parseInt(results[i].dataValues.total) / 100 * percent_goverment),
 					total_vehicle: parseInt(results[i].dataValues.total_vehicle),
 					month: results[i].dataValues.month,
 					year: results[i].dataValues.year,
@@ -446,6 +448,7 @@ module.exports = {
 
 			let forecasting = {
 				total: total,
+				goverment: Math.round(total / 100 * percent_goverment),
 				total_vehicle: total_vehicle,
 				month: month,
 				year: year,
@@ -480,12 +483,14 @@ module.exports = {
         }).then((results) => {
             let total = 0;
 			let total_vehicle = 0;
+			let percent_goverment= 30;
 			var datas = [];
 			for (let i = 0; i < results.length; i++) {
 				total = total + parseInt(results[i].dataValues.total);
 				total_vehicle = total_vehicle + parseInt(results[i].dataValues.total_vehicle);
 				let data = {
 					total: parseInt(results[i].dataValues.total),
+					goverment: Math.round(parseInt(results[i].dataValues.total) / 100 * percent_goverment),
 					total_vehicle: parseInt(results[i].dataValues.total_vehicle),
 					month: results[i].dataValues.month,
 					year: results[i].dataValues.year,
@@ -502,6 +507,7 @@ module.exports = {
 
 			let forecasting = {
 				total: total,
+				goverment: Math.round(total / 100 * percent_goverment),
 				total_vehicle: total_vehicle,
 				month: month,
 				year: year,
