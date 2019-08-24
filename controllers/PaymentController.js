@@ -417,16 +417,20 @@ module.exports = {
 		PaymentParkingModel.findAll({
 			attributes: [
 				[Sequelize.literal(`SUM(nominal)`), 'total'], 
+				[Sequelize.literal(`COUNT(*)`), 'total_vehicle'], 
 				[Sequelize.fn('MONTH', Sequelize.col('createdAt')), 'month'],
 				[Sequelize.fn('YEAR', Sequelize.col('createdAt')), 'year']],
 			group: [Sequelize.fn('MONTH', Sequelize.col('createdAt')), Sequelize.fn('YEAR', Sequelize.col('createdAt'))]
         }).then((results) => {
 			let total = 0;
+			let total_vehicle = 0;
 			var datas = [];
 			for (let i = 0; i < results.length; i++) {
 				total = total + parseInt(results[i].dataValues.total);
+				total_vehicle = total_vehicle + parseInt(results[i].dataValues.total_vehicle);
 				let data = {
 					total: parseInt(results[i].dataValues.total),
+					total_vehicle: parseInt(results[i].dataValues.total_vehicle),
 					month: results[i].dataValues.month,
 					year: results[i].dataValues.year,
 					type: "Real Data"
@@ -434,13 +438,15 @@ module.exports = {
 				datas.push(data);
 			}
 
-			total = total/results.length;
+			total = Math.round(total/results.length, 0);
+			total_vehicle = Math.round(total_vehicle/results.length, 0);
 			let dateObj = new Date();
 			let month = dateObj.getUTCMonth() + 2; //months from 1-12
 			let year = dateObj.getUTCFullYear();
 
 			let forecasting = {
 				total: total,
+				total_vehicle: total_vehicle,
 				month: month,
 				year: year,
 				type: "Forecasting Data"
@@ -472,11 +478,14 @@ module.exports = {
 			group: [Sequelize.fn('MONTH', Sequelize.col('createdAt')), Sequelize.fn('YEAR', Sequelize.col('createdAt'))]
         }).then((results) => {
             let total = 0;
+			let total_vehicle = 0;
 			var datas = [];
 			for (let i = 0; i < results.length; i++) {
 				total = total + parseInt(results[i].dataValues.total);
+				total_vehicle = total_vehicle + parseInt(results[i].dataValues.total_vehicle);
 				let data = {
 					total: parseInt(results[i].dataValues.total),
+					total_vehicle: parseInt(results[i].dataValues.total_vehicle),
 					month: results[i].dataValues.month,
 					year: results[i].dataValues.year,
 					type: "Real Data"
@@ -484,13 +493,15 @@ module.exports = {
 				datas.push(data);
 			}
 
-			total = total/results.length;
+			total = Math.round(total/results.length, 0);
+			total_vehicle = Math.round(total_vehicle/results.length, 0);
 			let dateObj = new Date();
 			let month = dateObj.getUTCMonth() + 2; //months from 1-12
 			let year = dateObj.getUTCFullYear();
 
 			let forecasting = {
 				total: total,
+				total_vehicle: total_vehicle,
 				month: month,
 				year: year,
 				type: "Forecasting Data"
