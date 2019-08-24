@@ -42,4 +42,16 @@ router.get(
 	'/gateway/',
 	PaymentController.processGetPaymentGateway
 );
+
+router.get(
+	'/month/',
+	PaymentController.processGetChartByMonth
+);
+
+router.get(
+	'/month/account/',
+	JWT.JWTverify,
+	PaymentController.processGetChartByMonthByAccount
+);
+
 module.exports = router;

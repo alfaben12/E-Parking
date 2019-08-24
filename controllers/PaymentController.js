@@ -4,6 +4,8 @@ const AccountModel = require('../models/AccountModel');
 const ParkingTypeModel = require('../models/ParkingTypeModel');
 const PaymentParkingModel = require('../models/PaymentParkingModel');
 const GlobalHelper = require('../helpers/GlobalHelper');
+const Sequelize = require('sequelize');
+
 module.exports = {
 	processPaymentParking: async function(req, res) {
         /* GLOBAL PARAMETER */
@@ -409,5 +411,100 @@ module.exports = {
 				datas: paymentData.dataValues
 			}
 		});
+	},
+
+	processGetChartByMonth: async function(req, res){
+		PaymentParkingModel.findAll({
+			attributes: [
+				[Sequelize.literal(`SUM(nominal)`), 'total'], 
+				[Sequelize.fn('MONTH', Sequelize.col('createdAt')), 'month'],
+				[Sequelize.fn('YEAR', Sequelize.col('createdAt')), 'year']],
+			group: [Sequelize.fn('MONTH', Sequelize.col('createdAt')), Sequelize.fn('YEAR', Sequelize.col('createdAt'))]
+        }).then((results) => {
+			let total = 0;
+			var datas = [];
+			for (let i = 0; i < results.length; i++) {
+				total = total + parseInt(results[i].dataValues.total);
+				let data = {
+					total: parseInt(results[i].dataValues.total),
+					month: results[i].dataValues.month,
+					year: results[i].dataValues.year,
+					type: "Real Data"
+				}
+				datas.push(data);
+			}
+
+			total = total/results.length;
+			let dateObj = new Date();
+			let month = dateObj.getUTCMonth() + 2; //months from 1-12
+			let year = dateObj.getUTCFullYear();
+
+			let forecasting = {
+				total: total,
+				month: month,
+				year: year,
+				type: "Forecasting Data"
+			}
+			datas.push(forecasting);
+
+            res.status(200).json({
+				result : true,
+				data: {
+					code: 200,
+					message: "Success fetch data.",
+					datas: datas
+				}
+			});
+        });
+	},
+
+	processGetChartByMonthByAccount: async function(req, res){
+		let accountid = req.payload.accountid;
+
+		PaymentParkingModel.findAll({
+			attributes: [
+				[Sequelize.literal(`SUM(nominal)`), 'total'], 
+				[Sequelize.fn('MONTH', Sequelize.col('createdAt')), 'month'],
+				[Sequelize.fn('YEAR', Sequelize.col('createdAt')), 'year']],
+			where: {
+				to_accountid: accountid
+			},
+			group: [Sequelize.fn('MONTH', Sequelize.col('createdAt')), Sequelize.fn('YEAR', Sequelize.col('createdAt'))]
+        }).then((results) => {
+            let total = 0;
+			var datas = [];
+			for (let i = 0; i < results.length; i++) {
+				total = total + parseInt(results[i].dataValues.total);
+				let data = {
+					total: parseInt(results[i].dataValues.total),
+					month: results[i].dataValues.month,
+					year: results[i].dataValues.year,
+					type: "Real Data"
+				}
+				datas.push(data);
+			}
+
+			total = total/results.length;
+			let dateObj = new Date();
+			let month = dateObj.getUTCMonth() + 2; //months from 1-12
+			let year = dateObj.getUTCFullYear();
+
+			let forecasting = {
+				total: total,
+				month: month,
+				year: year,
+				type: "Forecasting Data"
+			}
+			datas.push(forecasting);
+
+            res.status(200).json({
+				result : true,
+				data: {
+					code: 200,
+					message: "Success fetch data.",
+					datas: datas
+				}
+			});
+        });
 	}
 }
