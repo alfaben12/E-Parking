@@ -11,6 +11,9 @@ const PaymentGateway = sequelize.define(
 			primaryKey: true,
 			autoIncrement: true
 		},
+		payment_gateway_typeid: {
+			type: Sequelize.INTEGER
+		},
 		name: {
 			type: Sequelize.STRING(255)
         },

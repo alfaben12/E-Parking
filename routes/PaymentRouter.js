@@ -39,7 +39,7 @@ router.post(
 );
 
 router.get(
-	'/gateway/',
+	'/gateway/:payment_gateway_typeid',
 	PaymentController.processGetPaymentGateway
 );
 

@@ -392,9 +392,19 @@ module.exports = {
 	},
 
 	processGetPaymentGateway: async function(req, res){
+		let payment_gateway_typeid = req.params.payment_gateway_typeid;
+
 		/* PARAMETER ZSequelize */
 		let field = ['id', 'name', 'apikey', 'image', 'position'];
 		let where = false;
+		if(payment_gateway_typeid != 'all'){
+			where = {
+				payment_gateway_typeid: payment_gateway_typeid
+			};
+		}else{
+			where = false;
+		}
+		
 		let orderBy = [['position', 'ASC']];
 		let groupBy = false;
 		let model = 'PaymentGatewayModel';
