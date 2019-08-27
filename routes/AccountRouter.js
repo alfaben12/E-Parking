@@ -15,4 +15,10 @@ router.get(
 	AccountController.processFetchAccountDataParking
 );
 
+router.put(
+	'/',
+	JWT.JWTverify,
+	AccountController.processModifyAccount
+);
+
 module.exports = router;
