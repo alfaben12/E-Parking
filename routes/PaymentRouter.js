@@ -55,7 +55,7 @@ router.get(
 );
 
 router.get(
-	'/dummy/:size/:month/',
+	'/dummy/:size/:month/:day',
 	PaymentController.processPaymentParkingDummy
 );
 module.exports = router;

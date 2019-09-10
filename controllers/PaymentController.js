@@ -428,9 +428,10 @@ module.exports = {
 			attributes: [
 				[Sequelize.literal(`SUM(nominal)`), 'total'], 
 				[Sequelize.literal(`COUNT(*)`), 'total_vehicle'], 
+				[Sequelize.fn('DAY', Sequelize.col('createdAt')), 'day'],
 				[Sequelize.fn('MONTH', Sequelize.col('createdAt')), 'month'],
 				[Sequelize.fn('YEAR', Sequelize.col('createdAt')), 'year']],
-			group: [Sequelize.fn('MONTH', Sequelize.col('createdAt')), Sequelize.fn('YEAR', Sequelize.col('createdAt'))]
+			group: [Sequelize.fn('DAY', Sequelize.col('createdAt')), Sequelize.fn('MONTH', Sequelize.col('createdAt')), Sequelize.fn('YEAR', Sequelize.col('createdAt'))]
         }).then((results) => {
 			let total = 0;
 			let total_vehicle = 0;
@@ -484,12 +485,13 @@ module.exports = {
 			attributes: [
 				[Sequelize.literal(`SUM(nominal)`), 'total'],
 				[Sequelize.literal(`COUNT(*)`), 'total_vehicle'], 
+				[Sequelize.fn('DAY', Sequelize.col('createdAt')), 'day'],
 				[Sequelize.fn('MONTH', Sequelize.col('createdAt')), 'month'],
 				[Sequelize.fn('YEAR', Sequelize.col('createdAt')), 'year']],
 			where: {
 				to_accountid: accountid
 			},
-			group: [Sequelize.fn('MONTH', Sequelize.col('createdAt')), Sequelize.fn('YEAR', Sequelize.col('createdAt'))]
+			group: [Sequelize.fn('DAY', Sequelize.col('createdAt')), Sequelize.fn('MONTH', Sequelize.col('createdAt')), Sequelize.fn('YEAR', Sequelize.col('createdAt'))]
         }).then((results) => {
             let total = 0;
 			let total_vehicle = 0;
@@ -540,9 +542,10 @@ module.exports = {
 
 		let looping_size = parseInt(req.params.size, 10);
 		let month = parseInt(req.params.month, 10);
+		let day = parseInt(req.params.day, 10);
 		for (let i = 0; i < looping_size; i++) {
 			/* GLOBAL PARAMETER */
-			let parking_typeid = Math.floor(Math.random() * 4) + 1;
+			let parking_typeid = Math.floor(Math.random() * 2) + 1;
 
 			let payment_number = await GlobalHelper.generateUUID();
 			let nominal = 0;
@@ -628,7 +631,7 @@ module.exports = {
 
 			let date_created = Math.floor(Math.random() * (30 - 1 + 1)) + 1;
 
-			let createdAt = '2019-'+ month +"-"+ date_created +" 02:29:28";
+			let createdAt = '2019-'+ month +"-"+ day +" 02:29:28";
 
 			/* PARAMETER ZSequelize PAYMENT  */
 			let payment_value = {
@@ -666,7 +669,7 @@ module.exports = {
 			data: {
 				code: 200,
 				message: "Payment success.",
-				datas: "Added 50 dummy data payment parking."
+				datas: "Added "+ looping_size +" dummy data payment parking."
 			}
 		});
 	}
