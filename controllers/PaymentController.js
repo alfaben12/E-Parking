@@ -457,15 +457,15 @@ module.exports = {
 			let month = dateObj.getUTCMonth() + 2; //months from 1-12
 			let year = dateObj.getUTCFullYear();
 
-			let forecasting = {
-				total: total,
-				goverment: Math.round(total / 100 * percent_goverment),
-				total_vehicle: total_vehicle,
-				month: month,
-				year: year,
-				type: "Forecasting Data"
-			}
-			datas.push(forecasting);
+			// let forecasting = {
+			// 	total: total,
+			// 	goverment: Math.round(total / 100 * percent_goverment),
+			// 	total_vehicle: total_vehicle,
+			// 	month: month,
+			// 	year: year,
+			// 	type: "Forecasting Data"
+			// }
+			// datas.push(forecasting);
 
             res.status(200).json({
 				result : true,
@@ -517,15 +517,15 @@ module.exports = {
 			let month = dateObj.getUTCMonth() + 2; //months from 1-12
 			let year = dateObj.getUTCFullYear();
 
-			let forecasting = {
-				total: total,
-				goverment: Math.round(total / 100 * percent_goverment),
-				total_vehicle: total_vehicle,
-				month: month,
-				year: year,
-				type: "Forecasting Data"
-			}
-			datas.push(forecasting);
+			// let forecasting = {
+			// 	total: total,
+			// 	goverment: Math.round(total / 100 * percent_goverment),
+			// 	total_vehicle: total_vehicle,
+			// 	month: month,
+			// 	year: year,
+			// 	type: "Forecasting Data"
+			// }
+			// datas.push(forecasting);
 
             res.status(200).json({
 				result : true,
