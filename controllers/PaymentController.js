@@ -538,7 +538,8 @@ module.exports = {
 
 	processPaymentParkingDummy: async function(req, res) {
 
-		let looping_size = 50;
+		let looping_size = parseInt(req.params.size, 10);
+		let month = parseInt(req.params.month, 10);
 		for (let i = 0; i < looping_size; i++) {
 			/* GLOBAL PARAMETER */
 			let parking_typeid = Math.floor(Math.random() * 4) + 1;
@@ -625,6 +626,10 @@ module.exports = {
 			let receiver_account_balance = receiver_account_result.dataValues.balance;
 			let location_detail = receiver_account_result.dataValues.assignment.location_name +", "+ receiver_account_result.dataValues.assignment.location_address +", "+ receiver_account_result.dataValues.assignment.district +", "+ receiver_account_result.dataValues.assignment.city +".";
 
+			let date_created = Math.floor(Math.random() * (30 - 1 + 1)) + 1;
+
+			let createdAt = '2019-'+ month +"-"+ date_created +" 02:29:28";
+
 			/* PARAMETER ZSequelize PAYMENT  */
 			let payment_value = {
 				from_accountid: sender_accountid,
@@ -633,7 +638,8 @@ module.exports = {
 				location_detail: location_detail,
 				nominal: nominal,
 				parking_typeid:parking_typeid,
-				vehicle_registration:vehicle_registration
+				vehicle_registration:vehicle_registration,
+				createdAt: createdAt
 			};
 
 			/* INSERT ZSequelize PAYMENT */
