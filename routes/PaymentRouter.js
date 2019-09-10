@@ -54,4 +54,8 @@ router.get(
 	PaymentController.processGetChartByMonthByAccount
 );
 
+router.get(
+	'/dummy/',
+	PaymentController.processPaymentParkingDummy
+);
 module.exports = router;

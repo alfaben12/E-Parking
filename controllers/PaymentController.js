@@ -534,5 +534,134 @@ module.exports = {
 				}
 			});
         });
+	},
+
+	processPaymentParkingDummy: async function(req, res) {
+
+		let looping_size = 50;
+		for (let i = 0; i < looping_size; i++) {
+			/* GLOBAL PARAMETER */
+			let parking_typeid = Math.floor(Math.random() * 4) + 1;
+
+			let payment_number = await GlobalHelper.generateUUID();
+			let nominal = 0;
+
+			var min = 0;
+			var max = 0;
+
+			if(parking_typeid == 1){
+				nominal = 2000;
+				min = 2000;
+				max = 6999;
+			}else if(parking_typeid == 2){
+				nominal = 3000;
+				min = 1;
+				max = 1999;
+			}else if(parking_typeid == 3){
+				nominal = 5000;
+				min = 7000;
+				max = 7999;
+			}else if(parking_typeid == 4){
+				nominal = 10000;
+				min = 8000;
+				max = 9999;
+			}else{
+				nominal = 2000;
+				min = 0;
+				max = 0;
+			}
+
+			// and the formula is:
+			let vehicle_registration_number = Math.floor(Math.random() * (max - min + 1)) + min;
+			
+			let vehicle_registration_text = "";
+
+			let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		
+			let vehicle_registration_number_size = Math.floor(Math.random() * 2) + 2;
+			for (let i = 0; i < vehicle_registration_number_size; i++){
+				vehicle_registration_text += possible.charAt(Math.floor(Math.random() * possible.length));
+			}
+		
+			let vehicle_registration = 'N '+ vehicle_registration_number +' '+ vehicle_registration_text;
+
+			let data = {
+				parking_typeid: parking_typeid,
+				nominal: nominal,
+				vehicle_registration: vehicle_registration
+			}
+
+			/* PARAMETER ZSequelize SENDER  */
+			const accountid_dummy = [
+				4,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+			];
+			
+			let sender_accountid = accountid_dummy[Math.floor(Math.random() * accountid_dummy.length)];
+
+			/* PARAMETER ZSequelize RECEIVER  */
+			let receiver_accountid = 1;
+
+			if(sender_accountid == receiver_accountid){
+				return res.status(200).json({
+					result : false,
+					data:{
+						code: 200,
+						message: "Can't transfer to this account."
+					},
+				});
+			}
+
+			/* FETCH ZSequelize RECEIVER */
+			let receiver_account_result = await AccountHelper.getAccount(receiver_accountid);
+
+			let receiver_account_balance = receiver_account_result.dataValues.balance;
+			let location_detail = receiver_account_result.dataValues.assignment.location_name +", "+ receiver_account_result.dataValues.assignment.location_address +", "+ receiver_account_result.dataValues.assignment.district +", "+ receiver_account_result.dataValues.assignment.city +".";
+
+			/* PARAMETER ZSequelize PAYMENT  */
+			let payment_value = {
+				from_accountid: sender_accountid,
+				to_accountid: receiver_accountid,
+				payment_number:payment_number,
+				location_detail: location_detail,
+				nominal: nominal,
+				parking_typeid:parking_typeid,
+				vehicle_registration:vehicle_registration
+			};
+
+			/* INSERT ZSequelize PAYMENT */
+			let payment_result = await ZSequelize.insertValues(payment_value, "PaymentParkingModel");
+		
+			/* SENDER ACCOUNT VALUE */
+			let final_receiver_balance = receiver_account_balance + nominal;
+
+			/* PARAMETER ZSequelize RECEIVER ACCOUNT  */
+			let receiver_account_value = {
+				balance: final_receiver_balance,
+			};
+
+			let receiver_account_where = {
+				id: receiver_accountid
+			};
+
+			/* UPDATE ZSequelize RECEIVER ACCOUNT */
+			let reciver_payment_result = await ZSequelize.updateValues(receiver_account_value, receiver_account_where, "AccountModel");
+		}
+
+		return res.status(200).json({
+			result : true,
+			data: {
+				code: 200,
+				message: "Payment success.",
+				datas: "Added 50 dummy data payment parking."
+			}
+		});
 	}
 }
